@@ -1,2 +1,1 @@
-This project is a starting point for a Flutter application.
-
+This is an app for restaurants for showcasing the menu and recipes.
