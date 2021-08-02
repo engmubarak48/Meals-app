@@ -1,42 +1,77 @@
 import 'package:flutter/material.dart';
+import '../models/meal.dart';
 import '../widgets/meal_item.dart';
 
 import '../dummy_data.dart';
 
-class CategoryMealsScreen extends StatelessWidget {
+class CategoryMealsScreen extends StatefulWidget {
   static const routeName = '/category-meals';
-  // const ({ Key? key }) : super(key: key);
-  // final String CategoryId;
-  // final String CategoryTitle;
+  final List<Meal> availableMeals;
 
-  // CategoryMealsScreen(this.CategoryId, this.CategoryTitle);
+  CategoryMealsScreen(this.availableMeals);
+
+  @override
+  _CategoryMealsScreenState createState() => _CategoryMealsScreenState();
+}
+
+class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
+  String categoryTitle;
+  List<Meal> displayedMeals;
+  var _loadInitData = false;
+
+  @override
+  // void initState() {
+  //   final routArgs =
+  //       ModalRoute.of(context).settings.arguments as Map<String, String>;
+  //   categoryTitle = routArgs['title'];
+  //   final CategoryId = routArgs['id'];
+  //   displayedMeals = DUMMY_MEALS.where(
+  //     (meal) {
+  //       return meal.categories.contains(CategoryId);
+  //     },
+  //   ).toList();
+  //   super.initState();
+  // }
+  void didChangeDependencies() {
+    if (!_loadInitData) {
+      final routArgs =
+          ModalRoute.of(context).settings.arguments as Map<String, String>;
+      categoryTitle = routArgs['title'];
+      final CategoryId = routArgs['id'];
+      displayedMeals = widget.availableMeals.where(
+        (meal) {
+          return meal.categories.contains(CategoryId);
+        },
+      ).toList();
+      _loadInitData = true;
+    }
+    super.didChangeDependencies();
+  }
+
+  void _removeMeal(String mealId) {
+    setState(() {
+      displayedMeals.removeWhere((meal) => meal.id == mealId);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final routArgs =
-        ModalRoute.of(context).settings.arguments as Map<String, String>;
-    final CategoryTitle = routArgs['title'];
-    final CategoryId = routArgs['id'];
-    final categoryMeals = DUMMY_MEALS.where(
-      (meal) {
-        return meal.categories.contains(CategoryId);
-      },
-    ).toList();
     return Scaffold(
         appBar: AppBar(
-          title: Text(CategoryTitle),
+          title: Text(categoryTitle),
         ),
         body: ListView.builder(
           itemBuilder: (context, index) {
             return MealItem(
-                id: categoryMeals[index].id,
-                title: categoryMeals[index].title,
-                imageUrl: categoryMeals[index].imageUrl,
-                duration: categoryMeals[index].duration,
-                complexity: categoryMeals[index].complexity,
-                affordability: categoryMeals[index].affordability);
+                removeItem: _removeMeal,
+                id: displayedMeals[index].id,
+                title: displayedMeals[index].title,
+                imageUrl: displayedMeals[index].imageUrl,
+                duration: displayedMeals[index].duration,
+                complexity: displayedMeals[index].complexity,
+                affordability: displayedMeals[index].affordability);
           },
-          itemCount: categoryMeals.length,
+          itemCount: displayedMeals.length,
         ));
   }
 }
