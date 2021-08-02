@@ -1,4 +1,4 @@
-#Mon Aug 02 02:38:50 GMT 2021
+#Mon Aug 02 21:52:33 GMT 2021
 base.0=/home/mubarak/flutter_development/projects/Meals-app/build/app/intermediates/dex/debug/mergeDexDebug/out/classes.dex
 path.0=classes.dex
 renamed.0=classes.dex
